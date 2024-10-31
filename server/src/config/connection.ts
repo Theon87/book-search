@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI || '';
-// mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/googlebooks');
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/googlebooks'); // This was the previous code.
 
 const db = async (): Promise<typeof mongoose.connection> => {
     try {
@@ -16,5 +16,5 @@ const db = async (): Promise<typeof mongoose.connection> => {
     }
 };
 
-// export default mongoose.connection;
+// export default mongoose.connection; // This was the previous code.
 export default db;
