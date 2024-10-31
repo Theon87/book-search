@@ -1,6 +1,12 @@
 import express from 'express';
-import path from 'node:path';
+import { ApolloServer } from '@apollo/server';
+
+// import { typeDefs, resolvers } from './schemas/index.js';
 import db from './config/connection.js';
+
+import type { Request, Response } from 'express';
+import { expressMiddleware } from '@apollo/server/express4';
+import path from 'node:path';
 import routes from './routes/index.js';
 
 const app = express();
@@ -16,6 +22,6 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(routes);
 
-db.once('open', () => {
+// db.once('open', () => {
   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
-});
+// });
