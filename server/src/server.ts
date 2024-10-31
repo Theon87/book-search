@@ -7,7 +7,8 @@ import db from './config/connection.js';
 import type { Request, Response } from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import path from 'node:path';
-import routes from './routes/index.js';
+import { authenticateToken } from './utils/auth.js';
+// import routes from './routes/index.js';
 
 const server = new ApolloServer({
   typeDefs,
@@ -25,17 +26,20 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 
+  app.use('/graphql', expressMiddleware(server as any,
+    {
+      context: authenticateToken as any
+    }
+  ));
+
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/dist')));
 
     app.use('*', (_req: Request, res: Response) => {
       res.sendFile(path.join(__dirname, '../client/dist/index.html'));
     });
-
-    app.use(routes);
+    // app.use(routes);
   }
-
-  app.use('/graphql', expressMiddleware(server));
 
   app.listen(PORT, () => {
     console.log(`🌍 API server running on port ${PORT}!`);
