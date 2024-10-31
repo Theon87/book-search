@@ -1,6 +1,5 @@
 import { signToken, AuthenticationError } from '../utils/auth.js';
 import User from '../models/User.js';
-// import { saveBook } from '../controllers/user-controller';
 
 interface User {
     username: string;
