@@ -8,6 +8,8 @@ import type { Request, Response } from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import path from 'node:path';
 import { authenticateToken } from './utils/auth.js';
+import dotenv from 'dotenv';
+dotenv.config();
 // import routes from './routes/index.js';
 
 const server = new ApolloServer({

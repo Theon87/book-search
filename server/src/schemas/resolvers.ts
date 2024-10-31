@@ -39,7 +39,10 @@ interface Context {
 
 const resolvers = {
     Query: {
-        User: async (_parent: any, { _id }: userArgs): Promise<User | null> => {
+        Users: async () => {
+            return User.find().populate('savedBooks');
+        },
+        me: async (_parent: any, { _id }: userArgs): Promise<User | null> => {
             return await User.findOne({ _id });
         },
     },
