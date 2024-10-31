@@ -37,8 +37,6 @@ const typeDefs = `
   type Query {
     Users: [User]
     me: User
-    Book: [Book]
-    User(_id: ID!): User
   }
 
   type Mutation {
