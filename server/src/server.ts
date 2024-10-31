@@ -1,7 +1,7 @@
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
 
-// import { typeDefs, resolvers } from './schemas/index.js';
+import { typeDefs, resolvers } from './schemas/index.js';
 import db from './config/connection.js';
 
 import type { Request, Response } from 'express';
@@ -9,19 +9,38 @@ import { expressMiddleware } from '@apollo/server/express4';
 import path from 'node:path';
 import routes from './routes/index.js';
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+const startApolloServer = async () => {
 
-// if we're in production, serve client/build as static assets
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-}
+  await server.start();
+  await db();
 
-app.use(routes);
+  const PORT = process.env.PORT || 3001;
+  const app = express();
 
-// db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
-// });
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/dist')));
+
+    app.use('*', (_req: Request, res: Response) => {
+      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    });
+
+    app.use(routes);
+  }
+
+  app.use('/graphql', expressMiddleware(server));
+
+  app.listen(PORT, () => {
+    console.log(`🌍 API server running on port ${PORT}!`);
+    console.log(`🌍 Use GraphQL at http://localhost:${PORT}/graphql`);
+  });
+};
+
+startApolloServer();
