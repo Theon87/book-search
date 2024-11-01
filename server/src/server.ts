@@ -10,7 +10,7 @@ import path from 'node:path';
 import { authenticateToken } from './utils/auth.js';
 import dotenv from 'dotenv';
 dotenv.config();
-// import routes from './routes/index.js';
+import routes from './routes/index.js';
 
 const server = new ApolloServer({
   typeDefs,
@@ -40,7 +40,7 @@ const startApolloServer = async () => {
     app.use('*', (_req: Request, res: Response) => {
       res.sendFile(path.join(__dirname, '../client/dist/index.html'));
     });
-    // app.use(routes);
+    app.use(routes);
   }
 
   app.listen(PORT, () => {
